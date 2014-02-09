@@ -69,7 +69,7 @@ end
 
 function draw_square()
     glBegin(GL_QUADS);
-        glNormal(0.0, 0.0, 1.0)
+        #glNormal(0.0, 0.0, 1.0)
         glVertex(-1.0, -1.0,  0.0);
         glVertex( 1.0, -1.0,  0.0);
         glVertex( 1.0,  1.0,  0.0);
@@ -82,9 +82,9 @@ function draw(state)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     # white background
     glClearColor(1.0, 1.0, 1.0, 1.0)
-    glClear(GL_COLOR_BUFFER_BIT)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     # disable depth testing so blending works
-    #glEnable(GL_DEPTH_TEST)
+    glEnable(GL_DEPTH_TEST)
     glLoadIdentity()
 
     # set up ambient light
@@ -119,7 +119,7 @@ function main()
     GLFW.Init()
     # this time we'll set up anti-aliasing to smooth the edges
     GLFW.OpenWindowHint(GLFW.FSAA_SAMPLES, 4)
-    GLFW.OpenWindow(width, height, 0, 0, 0, 0, 0, 0, GLFW.WINDOW)
+    GLFW.OpenWindow(width, height, 0, 0, 0, 8, 24, 8, GLFW.WINDOW)
     GLFW.SetWindowTitle("Tutorial 4")
     GLFW.Enable(GLFW.STICKY_KEYS);
     initGL(width, height)

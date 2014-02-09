@@ -38,7 +38,7 @@ function initGL(w, h)
 
     # smooth shading
     glShadeModel(GL_SMOOTH)
-    #glEnable(GL_COLOR_MATERIAL)
+    glEnable(GL_COLOR_MATERIAL)
     #  Really Nice Perspective Calculations
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
@@ -71,31 +71,19 @@ end
 function draw_square()
     glBegin(GL_QUADS);
         glNormal(0.0, 0.0, 1.0)
-        glVertex(-1.0, -1.0,  0.0);
-        glVertex( 1.0, -1.0,  0.0);
-        glVertex( 1.0,  1.0,  0.0);
-        glVertex(-1.0,  1.0,  0.0);
-    glEnd();
+        glVertex(-1.0, -1.0,  0.0)
+        glVertex( 1.0, -1.0,  0.0)
+        glVertex( 1.0,  1.0,  0.0)
+        glVertex(-1.0,  1.0,  0.0)
+    glEnd()
 end
 
 function draw(state)
-    #glEnable(GL_BLEND)
-    #glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     # white background
     glClearColor(1.0, 1.0, 1.0, 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    # disable depth testing so blending works
     glLoadIdentity()
 
-    # set up ambient light
-    # glLightfv(GL_LIGHT1, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
-    # set up diffuse light
-    # glLightfv(GL_LIGHT1, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    # set the  light as directional
-    # glLightfv(GL_LIGHT1, GL_POSITION, [-1.0, 1.0, 1.0, 0.0])
-    #glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, [1.0, 0.0, 0.0, 1.0]);
-    #glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0]);
-    #glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, [0.0, 0.0, 0.0, 1.0]);
     # reset the current Modelview matrix
 
     glTranslate(0.0, 0.0, -6.0)
@@ -108,7 +96,7 @@ function draw(state)
     draw_cube()
     glPopMatrix()
     glTranslate(1.5, 0.0, 0.0)
-    #glColor(1.0, 0.0, 0.0, 0.5)
+    glColor(1.0, 0.0, 0.0, 0.5)
     draw_cube()
 end
 
@@ -124,9 +112,6 @@ function main()
     initGL(width, height)
 
     state = WorldState()
-
-
-    #glColor(0.8, 0.0, 0.2, 0.2)
 
     while GLFW.GetWindowParam(GLFW.OPENED) && !GLFW.GetKey(GLFW.KEY_ESC)
         draw(state)
