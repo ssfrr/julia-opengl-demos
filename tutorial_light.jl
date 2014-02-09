@@ -42,7 +42,10 @@ function initGL(w, h)
     #  Really Nice Perspective Calculations
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
+    # white background
+    glClearColor(1.0, 1.0, 1.0, 1.0)
     glEnable(GL_DEPTH_TEST)
+    glClearDepth(1.0)
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
 end
@@ -79,12 +82,10 @@ function draw_square()
 end
 
 function draw(state)
-    # white background
-    glClearColor(1.0, 1.0, 1.0, 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    # reset the current Modelview matrix
     glLoadIdentity()
 
-    # reset the current Modelview matrix
 
     glTranslate(0.0, 0.0, -6.0)
     glRotate(state.x_rot, 1.0, 0.0, 0.0)
@@ -95,9 +96,12 @@ function draw(state)
     glColor(0.0, 1.0, 0.0, 1.0)
     draw_cube()
     glPopMatrix()
+
+    glPushMatrix()
     glTranslate(1.5, 0.0, 0.0)
     glColor(1.0, 0.0, 0.0, 0.5)
     draw_cube()
+    glPopMatrix()
 end
 
 function main()
