@@ -33,17 +33,22 @@ function initGL(w, h)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     gluPerspective(45.0, aspect_ratio, 0.1, 100.0)
-
     glMatrixMode(GL_MODELVIEW)
 
     # smooth shading
     glShadeModel(GL_SMOOTH)
-    #glEnable(GL_LIGHTING)
-    #glEnable(GL_COLOR_MATERIAL)
     #  Really Nice Perspective Calculations
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
-    # set up blending function
+    glEnable(GL_BLEND)
+    glEnable(GL_CULL_FACE)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    glDepthFunc(GL_LEQUAL)
+    glEnable(GL_DEPTH_TEST)
+
+    # set the color and depth that are set on a glClear()
+    glClearColor(1.0, 1.0, 1.0, 1.0)
+    glClearDepth(1.0)
 end
 
 function draw_cube()
@@ -68,8 +73,10 @@ function draw_cube()
 end
 
 function draw_square()
+    # make sure to draw the vertices in counter-clockwise order if the quad is
+    # facing you
     glBegin(GL_QUADS);
-        #glNormal(0.0, 0.0, 1.0)
+        glNormal(0.0, 0.0, 1.0)
         glVertex(-1.0, -1.0,  0.0);
         glVertex( 1.0, -1.0,  0.0);
         glVertex( 1.0,  1.0,  0.0);
@@ -78,39 +85,31 @@ function draw_square()
 end
 
 function draw(state)
-    glEnable(GL_BLEND)
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-    # white background
-    glClearColor(1.0, 1.0, 1.0, 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    # disable depth testing so blending works
-    glEnable(GL_DEPTH_TEST)
-    glLoadIdentity()
 
-    # set up ambient light
-    # glLightfv(GL_LIGHT1, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
-    # set up diffuse light
-    # glLightfv(GL_LIGHT1, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    # set the  light as directional
-    # glLightfv(GL_LIGHT1, GL_POSITION, [-1.0, 1.0, 1.0, 0.0])
-    # glEnable(GL_LIGHT1)
-    #glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, [1.0, 0.0, 0.0, 1.0]);
-    #glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0]);
-    #glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, [0.0, 0.0, 0.0, 1.0]);
     # reset the current Modelview matrix
+    glLoadIdentity()
 
     glTranslate(0.0, 0.0, -6.0)
     glRotate(state.x_rot, 1.0, 0.0, 0.0)
     glRotate(state.y_rot, 0.0, 1.0, 0.0)
 
-    glPushMatrix()
-    glTranslate(-1.5, 0.0, 0.0)
     glColor(0.0, 1.0, 0.0, 1.0)
-    draw_cube()
+    glPushMatrix()
+        glTranslate(-1.5, 0.0, 0.0)
+        draw_cube()
     glPopMatrix()
-    glTranslate(1.5, 0.0, 0.0)
+
     glColor(1.0, 0.0, 0.0, 0.5)
-    draw_cube()
+    glPushMatrix()
+        glTranslate(1.5, 0.0, 0.0)
+        # here rather than do full z-sorting we just first draw the back faces
+        # and then the front faces
+        glCullFace(GL_FRONT)
+        draw_cube()
+        glCullFace(GL_BACK)
+        draw_cube()
+    glPopMatrix()
 end
 
 function main()
@@ -125,9 +124,6 @@ function main()
     initGL(width, height)
 
     state = WorldState()
-
-
-    #glColor(0.8, 0.0, 0.2, 0.2)
 
     while GLFW.GetWindowParam(GLFW.OPENED) && !GLFW.GetKey(GLFW.KEY_ESC)
         draw(state)
