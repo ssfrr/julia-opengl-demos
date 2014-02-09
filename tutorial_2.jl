@@ -59,7 +59,7 @@ function main()
     GLFW.Init()
     #GLFW.OpenWindowHint(GLFW.FSAA_SAMPLES, 4) # 4x antialiasing
     GLFW.OpenWindow(width, height, 0, 0, 0, 0, 0, 0, GLFW.WINDOW)
-    GLFW.SetWindowTitle("Bouncy, Bouncy")
+    GLFW.SetWindowTitle("Tutorial 2")
     GLFW.Enable(GLFW.STICKY_KEYS);
     initGL(width, height)
 
